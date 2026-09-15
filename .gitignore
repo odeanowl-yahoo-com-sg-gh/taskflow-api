@@ -1,0 +1,57 @@
+HELP.md
+target/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+#### Mac ###
+.DS_Store
+
+#### Windows ###
+Thumbs.db
+Desktop.ini
+
+#### Gradle ###
+.gradle/
+
+#### Others ###
+*.bak
+*.tmp
+*.swp
+*.log
+*.cache
+*copy*.*
+src/main/java/com/taskflow/taskflowapi/*copy*.*
+src/main/java/com/taskflow/taskflowapi/controller/*Copy*.*
+src/main/java/com/taskflow/taskflowapi/entity/*copy*.*
+src/main/java/com/taskflow/taskflowapi/repository/*Copy*.*
+src/main/java/com/taskflow/taskflowapi/service/*Copy*.*
+src/main/resources/*copy*.*
