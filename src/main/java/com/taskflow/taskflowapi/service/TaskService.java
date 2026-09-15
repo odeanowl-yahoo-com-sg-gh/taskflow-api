@@ -9,6 +9,7 @@ package com.taskflow.taskflowapi.service;
 
 // Import statements for Task entity
 import com.taskflow.taskflowapi.entity.Task;
+import com.taskflow.taskflowapi.exception.TaskNotFoundException;
 // Import statement for TaskRepository interface
 import com.taskflow.taskflowapi.repository.TaskRepository;
 
@@ -63,6 +64,9 @@ public class TaskService {
      * @param id the identifier of the task to delete
      */
     public void deleteTask(Long id) {
+        if (!taskRepository.existsById(id)) {
+            throw new TaskNotFoundException("Task not found with id: " + id);
+        }
         taskRepository.deleteById(id);
     } // End of deleteTask method by ID
     
@@ -74,39 +78,38 @@ public class TaskService {
      * @return the updated task if found; otherwise {@code null}
      */
     public Task updateTask(Long id, Task updatedTask) {
-        Task existingTask = taskRepository.findById(id).orElse(null);
-        if (existingTask != null) {
-            existingTask.setTitle(updatedTask.getTitle());
-            existingTask.setDescription(updatedTask.getDescription());
-            existingTask.setPriority(updatedTask.getPriority());
-            existingTask.setAssignee(updatedTask.getAssignee());
-            existingTask.setStatus(updatedTask.getStatus());
-            existingTask.setCreatedDate(updatedTask.getCreatedDate());
-            existingTask.setDueDate(updatedTask.getDueDate());
-            existingTask.setCompleted(updatedTask.isCompleted());
-            existingTask.setTags(updatedTask.getTags());
-            return taskRepository.save(existingTask);
-        }
-        return null;
+        Task existingTask = findTaskById(id);
+
+        existingTask.setTitle(updatedTask.getTitle());
+        existingTask.setDescription(updatedTask.getDescription());
+        existingTask.setPriority(updatedTask.getPriority());
+        existingTask.setAssignee(updatedTask.getAssignee());
+        existingTask.setStatus(updatedTask.getStatus());
+        existingTask.setCreatedDate(updatedTask.getCreatedDate());
+        existingTask.setDueDate(updatedTask.getDueDate());
+        existingTask.setCompleted(updatedTask.isCompleted());
+        existingTask.setTags(updatedTask.getTags());
+        
+        return taskRepository.save(existingTask);
     } // End of updateTask method by ID
 
     // Method to find a task by its ID
     // TODO: Complete this method
     // Use taskRepository.findById(id) to retrieve the task by its ID
-    // If not found, throw a RuntimeException with a message indicating that the task was not found: `new RuntimeException("Task not found with id: " + id)` 
+    // If not found, throw a RuntimeException with a message indicating that the task was not found: `new TaskNotFoundException("Task not found with id: " + id)` 
     /**
      * Finds a task by its identifier.
      *
      * @param id the identifier of the task to retrieve
      * @return the matching task
-     * @throws RuntimeException if no task exists for the given identifier
+     * @throws TaskNotFoundException if no task exists for the given identifier
      */
     public Task findTaskById(Long id) {
         // return taskRepository.findById(id)
         //         .orElse(null);
         // YOUR CODE HERE
         return taskRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Task not found with id: " + id));
+                .orElseThrow(() -> new TaskNotFoundException("Task not found with id: " + id));
     } // End of findTaskById method by ID
 
     /**
