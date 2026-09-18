@@ -1,10 +1,8 @@
 /**
+ * TaskService class for managing tasks.
  * Service layer for managing {@link com.taskflow.taskflowapi.entity.Task} entities.
- *
- * <p>This class provides task creation, update, deletion, and retrieval operations,
- * including filtering by completion status, priority, due date, title, and description.</p>
+ * This class provides task creation, update, deletion, and retrieval operations, including filtering by completion status, priority, due date, title, and description.
  */
-
 package com.taskflow.taskflowapi.service;
 
 // Import statements for Task entity
@@ -13,7 +11,9 @@ import com.taskflow.taskflowapi.exception.TaskNotFoundException;
 // Import statement for TaskRepository interface
 import com.taskflow.taskflowapi.repository.TaskRepository;
 
-import org.springframework.beans.factory.annotation.Autowired;
+// Import statements for Lombok annotations
+import lombok.RequiredArgsConstructor;
+
 // Import statements for Spring stereotype
 import org.springframework.stereotype.Service;
 
@@ -22,22 +22,27 @@ import java.util.List;
 // Import statements for LocalDateTime class and Spring annotations
 import java.time.LocalDate;
 
-// Service annotation to indicate that this class is a Spring service component
+/**
+ * Service annotation to indicate that this class is a Spring service component
+ */
 @Service
+
+/**
+ * RequiredArgsConstructor annotation from Lombok to generate a constructor with required arguments.
+ */
+@RequiredArgsConstructor
+
+/**
+ * Service class for managing tasks.
+ * Provides methods for creating, updating, deleting, and retrieving tasks.
+ */
 public class TaskService {
-    @Autowired
     // Private field for the TaskRepository to perform CRUD operations on Task entities
-    private TaskRepository taskRepository;
-
     /**
-     * Constructs a new service with the required repository dependency.
-     *
-     * @param taskRepository repository used to persist and retrieve tasks
+     * Repository layer used for task CRUD operations.
      */
-    public TaskService(TaskRepository taskRepository) {
-        this.taskRepository = taskRepository;
-    } // End of TaskService constructor
-
+    private final TaskRepository taskRepository;
+    
     /**
      * Creates a new task.
      *
@@ -87,7 +92,7 @@ public class TaskService {
         existingTask.setStatus(updatedTask.getStatus());
         existingTask.setCreatedDate(updatedTask.getCreatedDate());
         existingTask.setDueDate(updatedTask.getDueDate());
-        existingTask.setCompleted(updatedTask.isCompleted());
+        existingTask.setCompleted(updatedTask.getCompleted());
         existingTask.setTags(updatedTask.getTags());
         
         return taskRepository.save(existingTask);
@@ -129,7 +134,7 @@ public class TaskService {
      */
     public List<Task> findTasksByCompletionStatus(boolean completed) {
         return taskRepository.findAll().stream()
-                .filter(task -> task.isCompleted() == completed)
+                .filter(task -> task.getCompleted() == completed)
                 .toList();
     } // End of findTasksByCompletionStatus method by completion status
 

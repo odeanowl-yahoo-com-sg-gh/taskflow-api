@@ -1,52 +1,40 @@
-# Taskflow API - Project Status & Documentation
+# Taskflow API - Lombok Optimization (Step 2 Completed)
 
-## Project Overview
-Taskflow API is a Spring Boot 3 RESTful web service for managing tasks, project metadata, and tags using Spring Data JPA with an in-memory H2 database.
-
----
-
-## 1. Current Implementation Status
-
-### Core Architecture & Layers
-* **Entity (`Task.java`)**: Configured with JPA `@Entity`, `@Id`, `@GeneratedValue(strategy = GenerationType.IDENTITY)`, `@ElementCollection` for task tags, and ISO date formatting (`LocalDate`).
-* **Repository (`TaskRepository.java`)**: Extends `JpaRepository<Task, Long>`, supplying standard CRUD operations out of the box.
-* **Service (`TaskService.java`)**: Encapsulates business logic for retrieving all tasks, finding tasks by ID, and persisting new tasks.
-* **Controller (`TaskController.java`)**: Exposes `/api/tasks` endpoints (`GET /api/tasks`, `GET /api/tasks/{id}`, `POST /api/tasks`).
-* **Application Config (`application.properties`)**: Standardized for H2 in-memory mode (`jdbc:h2:mem:taskflowdb`), auto-executing initialization scripts via `spring.sql.init.mode=always` and `spring.jpa.defer-datasource-initialization=true`.
+## Phase Overview
+In this phase, we optimized the domain entity and service layer architecture by incorporating Lombok annotations. This eliminated manual getter/setter methods, boilerplate constructors, and explicit `@Autowired` annotations across the application.
 
 ---
 
-## 2. Verification & Testing Evidence
+## Key Refactorings
 
-The base requirements have been verified end-to-end:
-1. **Application Startup**: Clean execution via `mvn spring-boot:run` running on port `8080`.
-2. **Database Seeding**: Verified database initialization with 6 baseline tasks and tags from `initialTasks.sql`. Primary key sequence properly reset (`RESTART WITH 7`) to prevent key collisions.
-3. **API Endpoint Functionality**:
-   * **`GET /api/tasks`**: Returns HTTP 200 OK with the full array of tasks.
-   * **`GET /api/tasks/1`**: Returns HTTP 200 OK with details for task 1.
-   * **`POST /api/tasks`**: Successfully processed with Postman, returning HTTP 201 Created and persisting new entries (e.g., ID 7 and ID 8).
-4. **H2 Database Console Verification**: Connected via `jdbc:h2:mem:taskflowdb` with username `sa`. SQL queries (`SELECT * FROM TASKS;`) confirm that newly posted tasks are saved directly into memory.
+### 1. Domain Entity (`Task.java`)
+* **Lombok Annotations Added**:
+  * `@Data`: Generates getters, setters, `toString()`, `equals()`, and `hashCode()` methods dynamically at compile time.
+  * `@NoArgsConstructor`: Provides the default no-argument constructor required by JPA.
+  * `@AllArgsConstructor`: Generates a constructor matching all fields.
+* **Field Initialization**: `private List<String> tags = new ArrayList<>();` ensures safe collection handling on new instances.
+* **JPA Persistence Mapping**: Retained precise `@Column` and `@ElementCollection` mappings for H2 database persistence.
+
+### 2. Service Layer (`TaskService.java`)
+* **Lombok Dependency Injection**: Annotated with `@RequiredArgsConstructor` and declared `private final TaskRepository taskRepository;`.
+* **Clean Constructor Injection**: Removed manual constructors and explicit `@Autowired` annotations while retaining thread-safe immutability.
+
+### 3. Controller Layer (`TaskController.java`)
+* **Lombok Dependency Injection**: Annotated with `@RequiredArgsConstructor` and declared `private final TaskService taskService;`.
+* **Simplified Endpoints**: Cleaned up null checks in `getTaskById` by relying on `TaskNotFoundException` thrown from the service layer.
 
 ---
 
-## 3. Master Roadmap & Remaining Tasks
+## Impact & Code Maintenance
+* **Reduced Boilerplate**: Codebase size was significantly reduced while improving readability.
+* **Immutability Enforcement**: Using `final` fields alongside `@RequiredArgsConstructor` enforces compile-time safety across Spring components.
+* **Zero Regression**: Endpoints (`GET /api/tasks`, `GET /api/tasks/{id}`, `POST /api/tasks`) and exception handling behave as expected.
 
-### Step 1: Custom Exception Handling
-* [ ] Create `TaskNotFoundException.java` extending `RuntimeException`.
-* [ ] Refactor `TaskService.java` to throw `TaskNotFoundException` on missing records.
-* [ ] Implement `@ControllerAdvice` (`GlobalExceptionHandler.java`) to map missing resource exceptions to structured `404 NOT FOUND` JSON responses.
-* [ ] Verify exception behavior via Postman (`GET /api/tasks/999`).
+---
 
-### Step 2: Lombok Optimization
-* [ ] **`Task.java`**: Clean up constructors and initialize `tags = new ArrayList<>()`.
-* [ ] **`TaskService.java`**: Apply `@RequiredArgsConstructor` and `private final` fields to leverage clean constructor injection without `@Autowired`.
-* [ ] **`TaskController.java`**: Apply `@RequiredArgsConstructor` and `private final` fields.
+## Master Roadmap Progress
 
-### Step 3: Full CRUD Completion
-* [ ] Implement `@PutMapping("/{id}")` in `TaskController.java` to handle full task updates.
-* [ ] Implement `@DeleteMapping("/{id}")` in `TaskController.java` returning `204 No Content`.
-
-### Step 4: Architectural Design (Coding to an Interface)
-* [ ] Extract `TaskService` into a Java interface.
-* [ ] Move business implementation logic into `TaskServiceImpl.java` (`@Service`).
-* [ ] Inject the `TaskService` interface directly into `TaskController.java` to achieve full decoupling.
+- [x] **Step 1: Custom Exception Handling**
+- [x] **Step 2: Lombok Optimization**
+- [ ] **Step 3: Full CRUD Completion**
+- [ ] **Step 4: Architectural Design (Coding to an Interface)**

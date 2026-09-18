@@ -1,3 +1,8 @@
+/**
+ * Global exception handler for the Taskflow API.
+ * <p>This class handles exceptions thrown by the application and provides
+ * appropriate HTTP responses with structured error details.</p>
+ */
 package com.taskflow.taskflowapi.exception;
 
 // Import statements for Java utility classes used in exception handling
@@ -14,10 +19,15 @@ import org.springframework.http.HttpStatus;
 // This class handles exceptions globally and provides appropriate HTTP responses.
 @ControllerAdvice
 public class GlobalExceptionHandler {
-
   // Handle TaskNotFoundException and return a structured error response
   @ExceptionHandler(TaskNotFoundException.class)
   // Method to handle TaskNotFoundException and return a structured error response
+  /**
+   * Handles TaskNotFoundException and returns a structured error response.
+   *
+   * @param ex the TaskNotFoundException instance
+   * @return a ResponseEntity containing the error details and HTTP status code
+   */
   public ResponseEntity<Map<String, Object>> handleTaskNotFoundException(TaskNotFoundException ex) {
       Map<String, Object> response = new HashMap<>();
       
@@ -31,5 +41,4 @@ public class GlobalExceptionHandler {
 
       return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
   } // End of handleTaskNotFoundException method
-
 } // End of GlobalExceptionHandler class

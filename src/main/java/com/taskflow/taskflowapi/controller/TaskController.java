@@ -1,4 +1,6 @@
-// Controller class for handling task-related HTTP requests
+/**
+ * Controller class for handling task-related HTTP requests.
+ */
 package com.taskflow.taskflowapi.controller;
 
 // Import statements for Task entity
@@ -6,10 +8,12 @@ import com.taskflow.taskflowapi.entity.Task;
 // Import statement for TaskService class
 import com.taskflow.taskflowapi.service.TaskService;
 
+// Import statement for Lombok's RequiredArgsConstructor annotation
+import lombok.RequiredArgsConstructor;
+
 // Import statements for Spring annotations
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.ResponseEntity;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,27 +30,31 @@ import java.util.List;
  * RequestMapping annotation to specify the base URL for all endpoints in this controller
  */
 @RestController
+
+/**
+ * Base URL mapping for all task-related endpoints.
+ */
 @RequestMapping("/api/tasks")
 
+/**
+ * RequiredArgsConstructor annotation to generate a constructor with required arguments.
+ */
+@RequiredArgsConstructor 
+
 // Class definition for TaskController
+/**
+ * Controller class for managing task-related HTTP requests.
+ */
 public class TaskController {
-    @Autowired
     // Private final field for TaskService to handle business logic related to tasks
-    private TaskService taskService;
-
     /**
-     * Creates a controller with the required task service.
-     * Constructor for TaskController that takes a TaskService as a parameter
-     *
-     * @param taskService service layer used for task operations
+     * Service layer used for task operations.
      */
-    public TaskController(TaskService taskService) {
-        this.taskService = taskService;
-    } // End of TaskController constructor
+    private final TaskService taskService;   
 
+    // Additional methods for handling HTTP requests (e.g., GET, POST, PUT, DELETE) will be added here
     // Method to handle GET requests for retrieving all tasks
     @GetMapping
-    // Additional methods for handling HTTP requests (e.g., GET, POST, PUT, DELETE) will be added here
     /**
      * Retrieves all tasks.
     *
@@ -66,12 +74,17 @@ public class TaskController {
     */
     public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
         Task task = taskService.findTaskById(id);
-        if (task != null) {
-            return ResponseEntity.ok(task);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        // Since taskService.findTaskById throws an exception if the task is not found, we can rely on this behavior instead of manually checking for null.
+        // the following code is left as is for consistency and clarity but commented out.
+        // task is null will never happen due to the exception thrown by taskService.findTaskById.
+            // if (task != null) {
+            //     return ResponseEntity.ok(task);
+            // } else {
+            //     return ResponseEntity.notFound().build();
+            // }
+        return ResponseEntity.ok(task);
     } // End of getTaskById method
+    // } // End of getTaskById method
 
     // Method to handle POST requests for creating a new task
     @PostMapping
@@ -86,4 +99,4 @@ public class TaskController {
         // return ResponseEntity.ok(createdTask);
         return new ResponseEntity<>(createdTask, HttpStatus.CREATED);
     } // End of createTask method
-}
+} // End of TaskController class
