@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -99,4 +101,30 @@ public class TaskController {
         // return ResponseEntity.ok(createdTask);
         return new ResponseEntity<>(createdTask, HttpStatus.CREATED);
     } // End of createTask method
+
+    // Additional methods for handling other HTTP requests (e.g., PUT, DELETE) can be added here
+    @PutMapping("/{id}")
+    /**
+     * Updates an existing task.
+     *
+     * @param id task identifier
+     * @param task task payload with updated information
+     * @return HTTP 200 response containing the updated task
+     */
+    public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task task) {
+        Task updatedTask = taskService.updateTask(id, task);
+        return ResponseEntity.ok(updatedTask);
+    } // End of updateTask method
+
+    @DeleteMapping("/{id}")
+    /**
+     * Deletes a task by its identifier.
+     *
+     * @param id task identifier
+     * @return HTTP 204 response when the task is successfully deleted
+     */
+    public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
+        taskService.deleteTask(id);
+        return ResponseEntity.noContent().build();
+    } // End of deleteTask method
 } // End of TaskController class

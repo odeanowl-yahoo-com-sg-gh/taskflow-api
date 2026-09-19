@@ -44,14 +44,21 @@ Desktop.ini
 
 #### Others ###
 *.bak
+*.old
 *.tmp
 *.swp
 *.log
 *.cache
 *copy*.*
 src/main/java/com/taskflow/taskflowapi/*copy*.*
-src/main/java/com/taskflow/taskflowapi/controller/*Copy*.*
+src/main/java/com/taskflow/taskflowapi/*.old
+src/main/java/com/taskflow/taskflowapi/controller/*copy*.*
+src/main/java/com/taskflow/taskflowapi/controller/*.old
 src/main/java/com/taskflow/taskflowapi/entity/*copy*.*
-src/main/java/com/taskflow/taskflowapi/repository/*Copy*.*
-src/main/java/com/taskflow/taskflowapi/service/*Copy*.*
+src/main/java/com/taskflow/taskflowapi/entity/*.old
+src/main/java/com/taskflow/taskflowapi/repository/*copy*.*
+src/main/java/com/taskflow/taskflowapi/repository/*.old
+src/main/java/com/taskflow/taskflowapi/service/*copy*.*
+src/main/java/com/taskflow/taskflowapi/service/*.old
 src/main/resources/*copy*.*
+src/main/resources/*.old

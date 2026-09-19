@@ -1,34 +1,98 @@
-# Taskflow API - Lombok Optimization (Step 2 Completed)
+# Taskflow API - Full CRUD Completion (Step 3 Completed)
 
 ## Phase Overview
-In this phase, we optimized the domain entity and service layer architecture by incorporating Lombok annotations. This eliminated manual getter/setter methods, boilerplate constructors, and explicit `@Autowired` annotations across the application.
+In this phase, we completed full CRUD (Create, Read, Update, Delete) capability for the Task Management API by implementing `PUT` and `DELETE` HTTP endpoints. We also aligned entity updates and HTTP status code responses with RESTful standards.
 
 ---
 
-## Key Refactorings
+## Key Refactorings & Implementations
 
-### 1. Domain Entity (`Task.java`)
-* **Lombok Annotations Added**:
-  * `@Data`: Generates getters, setters, `toString()`, `equals()`, and `hashCode()` methods dynamically at compile time.
-  * `@NoArgsConstructor`: Provides the default no-argument constructor required by JPA.
-  * `@AllArgsConstructor`: Generates a constructor matching all fields.
-* **Field Initialization**: `private List<String> tags = new ArrayList<>();` ensures safe collection handling on new instances.
-* **JPA Persistence Mapping**: Retained precise `@Column` and `@ElementCollection` mappings for H2 database persistence.
+### 1. Controller Layer (`TaskController.java`)
+* **Update Endpoint (`PUT /api/tasks/{id}`)**:
+  * Added `@PutMapping("/{id}")` mapping to support full resource updates.
+  * Accepts updated `Task` payloads via `@RequestBody` and forwards them to `TaskService`.
+  * Returns an HTTP `200 OK` status with the updated entity representation.
+* **Delete Endpoint (`DELETE /api/tasks/{id}`)**:
+  * Added `@DeleteMapping("/{id}")` mapping to enable task removal.
+  * Delegates removal logic to `TaskService.deleteTask(id)`.
+  * Returns an HTTP `204 No Content` status upon successful deletion.
+* **Simplified `GET /{id}` Logic**:
+  * Streamlined `getTaskById` by delegating directly to `taskService.findTaskById(id)` without redundant null-checking, relying on centralized exception handling.
 
 ### 2. Service Layer (`TaskService.java`)
-* **Lombok Dependency Injection**: Annotated with `@RequiredArgsConstructor` and declared `private final TaskRepository taskRepository;`.
-* **Clean Constructor Injection**: Removed manual constructors and explicit `@Autowired` annotations while retaining thread-safe immutability.
-
-### 3. Controller Layer (`TaskController.java`)
-* **Lombok Dependency Injection**: Annotated with `@RequiredArgsConstructor` and declared `private final TaskService taskService;`.
-* **Simplified Endpoints**: Cleaned up null checks in `getTaskById` by relying on `TaskNotFoundException` thrown from the service layer.
+* **Resource Mutation (`updateTask`)**:
+  * Validates task existence via `findTaskById(id)` before updating entity properties.
+  * Applies modified field values (title, description, priority, assignee, status, dates, completion status, tags) and persists the updated entity via `taskRepository.save()`.
+* **Resource Removal (`deleteTask`)**:
+  * Verifies record existence using `taskRepository.existsById(id)`.
+  * Throws `TaskNotFoundException` if absent, otherwise calls `taskRepository.deleteById(id)`.
 
 ---
 
-## Impact & Code Maintenance
-* **Reduced Boilerplate**: Codebase size was significantly reduced while improving readability.
-* **Immutability Enforcement**: Using `final` fields alongside `@RequiredArgsConstructor` enforces compile-time safety across Spring components.
-* **Zero Regression**: Endpoints (`GET /api/tasks`, `GET /api/tasks/{id}`, `POST /api/tasks`) and exception handling behave as expected.
+## Postman Verification Guidelines
+
+### 1. Add Task (`POST`)
+* **Method**: `POST`
+* **URL**: `http://localhost:8080/api/tasks/`
+* **Headers**: `Content-Type: application/json`
+* **Request Body**:
+  ```json
+  {
+      "title": "Complete Step 3 Implementation",
+      "description": "Add record immediately after application is launched",
+      "priority": "HIGH",
+      "assignee": "Developer",
+      "status": "IN_PROGRESS",
+      "createdDate": "2026-09-19",
+      "dueDate": "2026-09-20",
+      "completed": false,
+      "tags": ["backend", "crud", "spring-boot"]
+  }
+
+### 2. Update Existing Task (`PUT`)
+* **Method**: `PUT`
+* **URL**: `http://localhost:8080/api/tasks/7`
+* **Headers**: `Content-Type: application/json`
+* **Request Body**:
+  ```json
+  {
+      "title": "Complete Step 3 Implementation",
+      "description": "Test PUT and DELETE endpoints to complete CRUD features",
+      "priority": "HIGH",
+      "assignee": "Developer",
+      "status": "IN_PROGRESS",
+      "createdDate": "2026-09-19",
+      "dueDate": "2026-09-20",
+      "completed": false,
+      "tags": ["backend", "crud", "spring-boot"]
+  }
+
+### 3. Delete Existing Task (`DELETE`)
+* **Method**: `DELETE`
+* **URL**: `http://localhost:8080/api/tasks/7`
+* **Headers**: `Content-Type: application/json`
+* **Request Body**:
+  ```json
+  {
+      "title": "Complete Step 3 Implementation",
+      "description": "Test PUT and DELETE endpoints to complete CRUD features",
+      "priority": "HIGH",
+      "assignee": "Developer",
+      "status": "IN_PROGRESS",
+      "createdDate": "2026-09-19",
+      "dueDate": "2026-09-20",
+      "completed": false,
+      "tags": ["backend", "crud", "spring-boot"]
+  }
+
+### 4. Verify Deletion (`GET`)
+* **Method**: `GET`
+* **URL**: `http://localhost:8080/api/tasks/7`
+* **Headers**: `Content-Type: application/json`
+* **Request Body**:
+  ```json
+  {
+  }
 
 ---
 
@@ -36,5 +100,5 @@ In this phase, we optimized the domain entity and service layer architecture by 
 
 - [x] **Step 1: Custom Exception Handling**
 - [x] **Step 2: Lombok Optimization**
-- [ ] **Step 3: Full CRUD Completion**
+- [x] **Step 3: Full CRUD Completion**
 - [ ] **Step 4: Architectural Design (Coding to an Interface)**
