@@ -40,3 +40,6 @@ To build and verify the refactored architecture:
 # Clean cached build artifacts and run application
 mvn clean
 mvn spring-boot:run
+```
+
+Reuse [verification of Postman of Step 3](https://github.com/odeanowl-yahoo-com-sg-gh/taskflow-api/blob/feature/crud/README.md)
