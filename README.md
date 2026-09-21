@@ -43,3 +43,8 @@ mvn spring-boot:run
 ```
 
 Reuse [verification of Postman of Step 3](https://github.com/odeanowl-yahoo-com-sg-gh/taskflow-api/blob/feature/crud/README.md#postman-verification-guidelines)
+
+---
+
+## Trainer / Reviewer Notes
+For a comprehensive overview of deferred architectural enhancements and future scopes (such as DTO mapping, Bean Validation, and JPA query optimization), please refer to [`FUTURE_IMPROVEMENTS.md`](./FUTURE_IMPROVEMENTS.md).
