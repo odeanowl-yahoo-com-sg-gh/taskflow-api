@@ -42,4 +42,4 @@ mvn clean
 mvn spring-boot:run
 ```
 
-Reuse [verification of Postman of Step 3](https://github.com/odeanowl-yahoo-com-sg-gh/taskflow-api/blob/feature/crud/README.md)
+Reuse [verification of Postman of Step 3](https://github.com/odeanowl-yahoo-com-sg-gh/taskflow-api/blob/feature/crud/README.md#postman-verification-guidelines)
