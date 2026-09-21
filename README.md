@@ -41,5 +41,9 @@ To build and verify the refactored architecture:
 mvn clean
 mvn spring-boot:run
 ```
+<<<<<<< HEAD
 
 Reuse [verification of Postman of Step 3](https://github.com/odeanowl-yahoo-com-sg-gh/taskflow-api/blob/feature/crud/README.md#postman-verification-guidelines)
+=======
+Reuse [verification of Postman of Step 3](https://github.com/odeanowl-yahoo-com-sg-gh/taskflow-api/blob/feature/crud/README.md)
+>>>>>>> 407a56c6a47a3d7eb64e98edff9ac8cc1c2d96a4
