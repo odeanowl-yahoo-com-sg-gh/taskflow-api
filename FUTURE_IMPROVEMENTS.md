@@ -10,6 +10,11 @@ This document outlines deferred technical enhancements, architectural considerat
 ### Current State
 * Custom query methods (e.g., filtering by status, priority, assignee, due date) are defined in `TaskService.java` and executed via Java Stream filtering on `findAll()` in `TaskServiceImpl.java`.
 
+### Rationale
+* **Why Deferred**:
+  * **Scope Focus**: Primary objective for Step 4 was demonstrating the **Service-Interface Pattern** and Dependency Inversion Principle, rather than writing custom database queries[cite: 1, 4].
+  * **Rapid Prototyping**: In-memory Stream processing allowed immediate validation of the service contract without changing the `TaskRepository` interface[cite: 4, 5].
+
 ### Target Scope
 * **Spring Data JPA Derived Queries**: Migrate in-memory Stream filters to `TaskRepository` interface methods (e.g., `findByStatusIgnoreCase(String status)`) to execute filtering directly at the database layer (H2/SQL).
 * **Controller Search Endpoints**: Expose request parameters on `@GetMapping` endpoints in `TaskController.java` to allow dynamic REST queries (e.g., `GET /api/tasks?status=IN_PROGRESS&priority=HIGH`).
@@ -20,6 +25,11 @@ This document outlines deferred technical enhancements, architectural considerat
 
 ### Current State
 * The `Task` JPA entity is directly exposed across all controller endpoints (`@RequestBody` and `ResponseEntity<Task>`).
+
+### Rationale
+* **Why Deferred**:
+  * **Architectural Simplicity**: Avoided premature abstraction while standardizing CRUD endpoints, HTTP status codes, and exception flows in Steps 1–3[cite: 1, 2, 5].
+  * **1:1 Entity Mapping**: The entity fields directly aligned with the required REST API schema for initial prototype requirements[cite: 2].
 
 ### Target Scope
 * **DTO Separation**: Introduce `TaskRequestDTO` and `TaskResponseDTO` to encapsulate API view models and prevent over-posting or leaking database internal structure.
@@ -32,6 +42,10 @@ This document outlines deferred technical enhancements, architectural considerat
 ### Current State
 * Entity fields lack explicit constraints, and request payloads rely on standard Java type checks.
 
+### Rationale
+* **Why Deferred**:
+  * **Centralization Priority**: Step 1 focused on centralizing error formatting (`GlobalExceptionHandler`) for missing resource lookups rather than payload field validation[cite: 1, 2, 5].
+
 ### Target Scope
 * **Bean Validation (`jakarta.validation`)**: Add constraints to entity/DTO fields (e.g., `@NotBlank`, `@Size`, `@FutureOrPresent`).
 * **Validation Binding**: Apply `@Valid` on `@RequestBody` parameters in `TaskController.java`.
@@ -43,6 +57,10 @@ This document outlines deferred technical enhancements, architectural considerat
 
 ### Current State
 * H2 database relies on Spring Data JPA auto-ddl generation without initial dataset scripts.
+
+### Rationale
+* **Why Deferred**:
+  * **Manual Verification**: Interactive API testing via Postman was sufficient to verify `200 OK`, `201 Created`, `204 No Content`, and `404 Not Found` behaviors during active development[cite: 1, 2, 5].
 
 ### Target Scope
 * **SQL Seeding**: Add `schema.sql` and `data.sql` scripts under `src/main/resources` to pre-populate mock task data for development and manual testing.
